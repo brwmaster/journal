@@ -1,40 +1,52 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, defineEmits } from "vue";
 import EmojiField from "@/components/EmojiField.vue";
 import type Emoji from "@/types/Emoji";
+import type Entry from "@/types/Entry";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ArrowCircleRight from "@/assets/icons/arrow-circle-right.svg?component";
 
 // data
-const text = ref("");
+const body = ref("");
 const emoji = ref<Emoji | null>(null);
 const maxChars = 280;
 
 // computed
-const charCount = computed(() => text.value.length);
+const charCount = computed(() => body.value.length);
 
 // methods
 const handleTextInput = (e: Event) => {
   const textarea = e.target as HTMLTextAreaElement;
 
   if (textarea.value.length <= maxChars) {
-    text.value = textarea.value;
+    body.value = textarea.value;
   } else {
-    text.value = textarea.value = textarea.value.substring(0, maxChars);
+    body.value = textarea.value = textarea.value.substring(0, maxChars);
   }
 };
 
 // emits
 defineEmits<{
-  (e: "@create", entry: { text: string; emoji: Emoji | null }): void;
+  (e: "@create", entry: Entry): void;
 }>();
 </script>
 
 <template>
-  <form class="entry-form" @submit.prevent="$emit('@create', { text, emoji })">
+  <form
+    class="entry-form"
+    @submit.prevent="
+      $emit('@create', {
+        id: Math.random(),
+        body,
+        emoji,
+        createdAt: new Date(),
+        userId: 1,
+      })
+    "
+  >
     <textarea
-      :value="text"
+      :value="body"
       @keyup="handleTextInput"
       placeholder="New Journal Entry for danielkelly_io"
     ></textarea>
