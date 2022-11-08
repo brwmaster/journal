@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import EmojiField from "@/components/EmojiField.vue";
 import type Emoji from "@/types/Emoji";
 import type Entry from "@/types/Entry";
@@ -11,6 +11,13 @@ import ArrowCircleRight from "@/assets/icons/arrow-circle-right.svg?component";
 const body = ref("");
 const emoji = ref<Emoji | null>(null);
 const maxChars = 280;
+
+// template refs
+const textarea = ref<HTMLTextAreaElement | null>(null);
+
+onMounted(() => {
+  textarea.value?.focus();
+});
 
 // computed
 const charCount = computed(() => body.value.length);
@@ -49,6 +56,7 @@ const onSubmit = () => {
   <form class="entry-form" @submit.prevent="onSubmit">
     <textarea
       :value="body"
+      ref="textarea"
       @keyup="handleTextInput"
       placeholder="New Journal Entry for danielkelly_io"
     ></textarea>
