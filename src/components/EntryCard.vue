@@ -5,7 +5,7 @@ import type Entry from "@/types/Entry";
 
 const { findEmoji } = UseEmojis();
 
-const props = defineProps<{
+defineProps<{
   entry: Entry;
 }>();
 </script>
