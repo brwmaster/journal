@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, defineEmits } from "vue";
+import { ref, computed } from "vue";
 import EmojiField from "@/components/EmojiField.vue";
 import type Emoji from "@/types/Emoji";
 import type Entry from "@/types/Entry";
@@ -15,6 +15,11 @@ const maxChars = 280;
 // computed
 const charCount = computed(() => body.value.length);
 
+// emits
+const emit = defineEmits<{
+  (e: "@create", entry: Entry): void;
+}>();
+
 // methods
 const handleTextInput = (e: Event) => {
   const textarea = e.target as HTMLTextAreaElement;
@@ -26,25 +31,22 @@ const handleTextInput = (e: Event) => {
   }
 };
 
-// emits
-defineEmits<{
-  (e: "@create", entry: Entry): void;
-}>();
+const onSubmit = () => {
+  emit("@create", {
+    id: Math.random(),
+    body: body.value,
+    emoji: emoji.value,
+    createdAt: new Date(),
+    userId: 1,
+  });
+
+  body.value = "";
+  emoji.value = null;
+};
 </script>
 
 <template>
-  <form
-    class="entry-form"
-    @submit.prevent="
-      $emit('@create', {
-        id: Math.random(),
-        body,
-        emoji,
-        createdAt: new Date(),
-        userId: 1,
-      })
-    "
-  >
+  <form class="entry-form" @submit.prevent="onSubmit">
     <textarea
       :value="body"
       @keyup="handleTextInput"
