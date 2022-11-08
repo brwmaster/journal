@@ -14,8 +14,10 @@ const user: User = reactive({
 
 console.log(user.id);
 
+const entries: Entry[] = reactive([]);
+
 const handleCreateEntry = (entry: Entry) => {
-  console.log(entry);
+  entries.unshift(entry);
 };
 </script>
 
@@ -24,7 +26,7 @@ const handleCreateEntry = (entry: Entry) => {
     <TheHeader />
     <EntryEditor @@create="handleCreateEntry($event)" />
     <ul>
-      <li>
+      <li v-for="entry in entries" :key="entry.id">
         <EntryCard />
       </li>
     </ul>
